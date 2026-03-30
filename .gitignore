@@ -2,3 +2,5 @@
 AI-Code-Assistant/.venv/
 AI-Code-Assistant/.env
 AI-Code-Assistant/**/__pycache__/
+AI-Code-Assistant/data/*.db
+AI-Code-Assistant/data/faiss_index/
