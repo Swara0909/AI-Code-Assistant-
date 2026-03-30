@@ -12,13 +12,35 @@ from app.config.settings import (
 )
 
 
-def get_llm() -> ChatOpenAI:
+import httpx
+
+from langchain_openai import ChatOpenAI
+from app.config.settings import (
+    OPENROUTER_API_KEY,
+    OPENROUTER_BASE_URL,
+    DEEPSEEK_MODEL,
+    LLM_TEMPERATURE,
+    LLM_MAX_TOKENS,
+    OPENROUTER_VERIFY_SSL,
+    OPENROUTER_CA_BUNDLE,
+)
+
+
+class MockLLM:
+    """Mock LLM for demo purposes when API key is missing."""
+    def invoke(self, messages):
+        from langchain_core.messages import AIMessage
+        return AIMessage(content="This is a demo response. Please set your OPENROUTER_API_KEY in the .env file to get real AI responses.")
+
+    async def ainvoke(self, messages):
+        from langchain_core.messages import AIMessage
+        return AIMessage(content="This is a demo response. Please set your OPENROUTER_API_KEY in the .env file to get real AI responses.")
+
+
+def get_llm():
     if not OPENROUTER_API_KEY:
-        raise ValueError(
-            "❌  OPENROUTER_API_KEY is missing.\n"
-            "Set it in your .env file:\n"
-            "  OPENROUTER_API_KEY=sk-or-..."
-        )
+        print("⚠️  OPENROUTER_API_KEY is missing. Using mock LLM for demo.")
+        return MockLLM()
 
     http_client = None
     if not OPENROUTER_VERIFY_SSL:

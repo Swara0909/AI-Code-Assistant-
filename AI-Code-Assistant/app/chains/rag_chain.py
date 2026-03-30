@@ -21,8 +21,8 @@ BUG FIXES
 
 from __future__ import annotations
 
-from langchain.chains import ConversationalRetrievalChain, LLMChain
-from langchain.prompts import (
+from langchain_classic.chains import ConversationalRetrievalChain, LLMChain
+from langchain_core.prompts import (
     PromptTemplate,
     ChatPromptTemplate,
     SystemMessagePromptTemplate,

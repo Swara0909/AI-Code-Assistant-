@@ -140,10 +140,99 @@ class ChatService:
                 "mode": "llm",
             }
         except AuthenticationError as exc:
-            raise RuntimeError(
-                "OpenRouter authentication failed (401). "
-                "Check OPENROUTER_API_KEY in .env and ensure the key is active."
-            ) from exc
+            # Fall back to demo mode when API key is invalid
+            question_lower = question.lower()
+            if "fibonacci" in question_lower or "fibonaci" in question_lower:
+                demo_code = """```python
+def fibonacci(n):
+    \"\"\"Generate the nth Fibonacci number\"\"\"
+    if n <= 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        a, b = 0, 1
+        for _ in range(2, n + 1):
+            a, b = b, a + b
+        return b
+
+def fibonacci_sequence(n):
+    \"\"\"Generate first n Fibonacci numbers\"\"\"
+    sequence = []
+    a, b = 0, 1
+    for _ in range(n):
+        sequence.append(a)
+        a, b = b, a + b
+    return sequence
+
+# Example usage
+print(fibonacci(10))  # 55
+print(fibonacci_sequence(10))  # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+```"""
+            elif "prime" in question_lower:
+                demo_code = """```python
+def is_prime(n):
+    \"\"\"Check if a number is prime\"\"\"
+    if n <= 1:
+        return False
+    for i in range(2, int(n**0.5) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+def generate_primes(limit):
+    \"\"\"Generate all prime numbers up to a limit\"\"\"
+    primes = []
+    for num in range(2, limit + 1):
+        if is_prime(num):
+            primes.append(num)
+    return primes
+
+# Example usage
+print(is_prime(17))  # True
+print(generate_primes(50))  # [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+```"""
+            elif "explain" in question_lower or "what does" in question_lower or "how does" in question_lower:
+                demo_code = """## Code Explanation
+
+This is a demo explanation. In a real AI response, I would analyze the code you provided and explain:
+
+- **What the code does**: Break down the main functionality
+- **How it works**: Step-by-step logic explanation
+- **Key concepts**: Important programming concepts used
+- **Potential improvements**: Suggestions for optimization or best practices
+
+For example, if you shared Fibonacci code, I would explain:
+- The recursive nature of Fibonacci sequences
+- How the iterative approach works
+- Time and space complexity analysis
+- Alternative implementations
+
+To get detailed explanations of your code, please update your OPENROUTER_API_KEY in the .env file."""
+            else:
+                demo_code = """```python
+# This is a demo response. Here's a simple example:
+
+def hello_world():
+    \"\"\"A simple hello world function\"\"\"
+    return "Hello, World!"
+
+def calculate_sum(numbers):
+    \"\"\"Calculate the sum of a list of numbers\"\"\"
+    return sum(numbers)
+
+# Example usage
+print(hello_world())
+print(calculate_sum([1, 2, 3, 4, 5]))  # 15
+```"""
+
+            return {
+                "answer": f"⚠️ OpenRouter API key is invalid or expired. This is demo mode.\n\n"
+                         f"Here's a sample response for your question:\n\n{demo_code}\n\n"
+                         "To get real AI responses, please update your OPENROUTER_API_KEY in the .env file.",
+                "source_documents": [],
+                "mode": "demo",
+            }
         except APIConnectionError as exc:
             raise RuntimeError(
                 "OpenRouter connection failed. "

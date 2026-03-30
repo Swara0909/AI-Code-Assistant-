@@ -15,7 +15,7 @@ from langchain_community.document_loaders import (
     PyPDFLoader,
     UnstructuredMarkdownLoader,
 )
-from langchain.text_splitter import RecursiveCharacterTextSplitter, Language
+from langchain_text_splitters import RecursiveCharacterTextSplitter, Language
 
 from app.config.settings import CHUNK_SIZE, CHUNK_OVERLAP
 
