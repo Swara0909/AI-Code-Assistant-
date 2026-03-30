@@ -1,0 +1,4 @@
+.venv/
+AI-Code-Assistant/.venv/
+AI-Code-Assistant/.env
+AI-Code-Assistant/**/__pycache__/
