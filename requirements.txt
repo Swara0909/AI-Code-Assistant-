@@ -1,1 +1,29 @@
--r AI-Code-Assistant/requirements.txt
+# ── Core LangChain ────────────────────────────────────────────────────────────
+langchain==0.3.25
+langchain-core==0.3.59
+langchain-community==0.3.24
+langchain-openai==0.3.16
+
+# ── LLM / API ─────────────────────────────────────────────────────────────────
+openai>=1.30.0                  # langchain-openai depends on this
+
+# ── Embeddings (CodeBERT) ─────────────────────────────────────────────────────
+transformers>=4.40.0
+torch>=2.2.0                    # CPU-only build is fine for embeddings
+
+# ── Vector Store ──────────────────────────────────────────────────────────────
+faiss-cpu>=1.8.0
+
+# ── Memory persistence ────────────────────────────────────────────────────────
+sqlalchemy>=2.0.0               # SQLChatMessageHistory backend
+
+# ── Document loaders ──────────────────────────────────────────────────────────
+pypdf>=4.0.0                    # PDF loading
+unstructured>=0.13.0            # Markdown / misc loaders
+
+# ── UI ────────────────────────────────────────────────────────────────────────
+streamlit>=1.35.0
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+python-dotenv>=1.0.0
+numpy>=1.26.0
