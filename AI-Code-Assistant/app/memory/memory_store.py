@@ -12,7 +12,7 @@ correct output_key for each.
 """
 
 from langchain_community.chat_message_histories import SQLChatMessageHistory
-from langchain.memory import ConversationBufferWindowMemory
+from langchain_classic.memory import ConversationBufferWindowMemory
 
 from app.config.settings import SQLITE_DB_PATH, MEMORY_WINDOW_K, SESSION_ID_DEFAULT
 

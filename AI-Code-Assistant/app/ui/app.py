@@ -51,6 +51,33 @@ def _init_state() -> None:
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
+    # Add chat history (example titles and messages)
+    if "chat_histories" not in st.session_state:
+        st.session_state.chat_histories = [
+            {"title": "Git Error Fix", "messages": [
+                {"role": "user", "content": "How do I fix this git error?"},
+                {"role": "assistant", "content": "Try running 'git fetch --all' and then 'git reset --hard origin/main'."}
+            ]},
+            {"title": "Cloned Project Not Visible", "messages": [
+                {"role": "user", "content": "I cloned a project but can't see it in VS Code."},
+                {"role": "assistant", "content": "Check if you opened the correct folder. Use 'File > Open Folder' in VS Code."}
+            ]},
+            {"title": "Best Udemy AI Courses", "messages": [
+                {"role": "user", "content": "What are the best Udemy courses for AI?"},
+                {"role": "assistant", "content": "Some top-rated courses are 'Python for Data Science and Machine Learning Bootcamp' and 'Deep Learning A-Z'."}
+            ]},
+            {"title": "Missing package installation", "messages": [
+                {"role": "user", "content": "ModuleNotFoundError: No module named 'numpy'"},
+                {"role": "assistant", "content": "Install it using 'pip install numpy' in your terminal."}
+            ]},
+            {"title": "AI Engineer Roadmap Guide", "messages": [
+                {"role": "user", "content": "Can you give me a roadmap to become an AI engineer?"},
+                {"role": "assistant", "content": "Start with Python, learn ML basics, then deep learning, NLP, and deployment. Practice with projects."}
+            ]},
+        ]
+    if "selected_chat_index" not in st.session_state:
+        st.session_state.selected_chat_index = 0
+
 
 _init_state()
 service: ChatService = st.session_state.service
@@ -58,8 +85,21 @@ service: ChatService = st.session_state.service
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
+
     st.title(f"{APP_ICON} {APP_TITLE}")
     st.caption("Paste code directly — no file upload needed.")
+    st.markdown("---")
+
+    # Chat history section
+    st.markdown("#### Your chats")
+    chat_titles = [chat["title"] for chat in st.session_state.chat_histories]
+    selected = st.radio("Select a chat", chat_titles, index=st.session_state.selected_chat_index, key="chat_history_radio")
+    selected_index = chat_titles.index(selected)
+    if selected_index != st.session_state.selected_chat_index:
+        st.session_state.selected_chat_index = selected_index
+        # Load the selected chat's messages
+        st.session_state.messages = st.session_state.chat_histories[selected_index]["messages"].copy()
+        st.rerun()
     st.markdown("---")
 
     # Session controls
